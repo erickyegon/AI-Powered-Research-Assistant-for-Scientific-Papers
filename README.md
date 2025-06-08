@@ -1,0 +1,2 @@
+# AI-Powered-Research-Assistant-for-Scientific-Papers
+AI-Powered Research Assistant for Scientific Papers leverages LangGraph, LangServe, and LangChain with Euri LLM to deliver a robust, production-grade platform. It features modular workflows, secure API endpoints, PostgreSQL persistence, Pinecone embeddings, a modern Streamlit UI, and essential deployment, security, and performance optimizations.
