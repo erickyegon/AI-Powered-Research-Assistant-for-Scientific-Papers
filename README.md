@@ -10,7 +10,7 @@
 
 **A production-grade AI research assistant built with LangChain ecosystem**
 
-[🚀 Live Demo](https://ai-research-assistant-frontend.onrender.com) • [📖 Documentation](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/wiki) • [🔗 API Docs](https://ai-research-assistant-backend.onrender.com/docs)
+[🚀 Live Demo](https://ai-research-assistant-frontend.onrender.com) • [📖 User Guide](USER_GUIDE.md) • [🔌 API Documentation](API_DOCUMENTATION.md) • [🎮 Interactive Playground](https://ai-research-assistant-backend.onrender.com/docs)
 
 </div>
 
@@ -329,6 +329,238 @@ AI-Powered Research Assistant/
 
 ---
 
+## 📖 **Documentation**
+
+### **🎯 Getting Started**
+
+#### **For End Users**
+1. **Access the Application**: Visit [Live Demo](https://ai-research-assistant-frontend.onrender.com)
+2. **Upload Documents**: Drag and drop PDF research papers or paste text
+3. **Ask Questions**: Enter research queries in natural language
+4. **Get Results**: Receive AI-powered answers with citations and sources
+5. **Export Results**: Download summaries and citations in various formats
+
+#### **For Developers**
+1. **API Documentation**: [Interactive API Docs](https://ai-research-assistant-backend.onrender.com/docs)
+2. **Health Monitoring**: [System Health](https://ai-research-assistant-backend.onrender.com/health)
+3. **Configuration**: [Current Config](https://ai-research-assistant-backend.onrender.com/api/config)
+4. **Test Endpoint**: [API Test](https://ai-research-assistant-backend.onrender.com/api/test)
+
+### **🔌 API Usage Examples**
+
+#### **Basic Query Processing**
+```python
+import requests
+
+# Process a research query
+response = requests.post(
+    "https://ai-research-assistant-backend.onrender.com/api/query",
+    json={
+        "query": "What are the latest developments in transformer architectures?",
+        "include_enhancement": True,
+        "max_results": 5
+    }
+)
+
+result = response.json()
+print(f"Response: {result['response']}")
+print(f"Enhanced Query: {result['enhanced_query']}")
+```
+
+#### **Document Summarization**
+```python
+# Summarize research content
+response = requests.post(
+    "https://ai-research-assistant-backend.onrender.com/api/summarize",
+    json={
+        "text": "Your research paper content here...",
+        "summary_type": "detailed"  # Options: brief, detailed, bullet_points
+    }
+)
+
+summary = response.json()
+print(f"Summary: {summary['summary']}")
+print(f"Compression Ratio: {summary['original_length']}/{summary['summary_length']}")
+```
+
+#### **Health Check**
+```python
+# Check system health
+response = requests.get("https://ai-research-assistant-backend.onrender.com/health")
+health = response.json()
+
+print(f"Status: {health['status']}")
+print(f"Components: {health['components']}")
+```
+
+### **🎮 Interactive Playgrounds**
+
+#### **FastAPI Interactive Docs**
+- **URL**: https://ai-research-assistant-backend.onrender.com/docs
+- **Features**:
+  - Try all API endpoints directly in browser
+  - See request/response schemas
+  - Test with your own data
+  - Download OpenAPI specification
+
+#### **Alternative Documentation**
+- **ReDoc**: https://ai-research-assistant-backend.onrender.com/redoc
+- **OpenAPI JSON**: https://ai-research-assistant-backend.onrender.com/openapi.json
+
+### **📊 Monitoring & Observability**
+
+#### **System Health Dashboard**
+```bash
+# Check overall system health
+curl https://ai-research-assistant-backend.onrender.com/health
+
+# Expected Response:
+{
+  "status": "healthy",
+  "version": "production-1.0.0",
+  "startup_complete": true,
+  "components": {
+    "euri_available": true,
+    "euri_configured": true,
+    "langsmith_configured": true,
+    "llm_initialized": true
+  },
+  "environment": "production"
+}
+```
+
+#### **Configuration Inspection**
+```bash
+# View current configuration (non-sensitive data only)
+curl https://ai-research-assistant-backend.onrender.com/api/config
+
+# Expected Response:
+{
+  "euri": {
+    "api_key_configured": true,
+    "model": "gpt-4.1-nano",
+    "temperature": "0.7",
+    "max_tokens": "2000"
+  },
+  "app": {
+    "environment": "production",
+    "debug": "false",
+    "version": "1.0.0"
+  }
+}
+```
+
+### **🔧 Advanced Usage**
+
+#### **Custom Headers and Authentication**
+```python
+import requests
+
+headers = {
+    "Content-Type": "application/json",
+    "User-Agent": "Research-Assistant-Client/1.0"
+}
+
+# Query with custom headers
+response = requests.post(
+    "https://ai-research-assistant-backend.onrender.com/api/query",
+    headers=headers,
+    json={"query": "Explain quantum computing applications"}
+)
+```
+
+#### **Error Handling**
+```python
+import requests
+from requests.exceptions import RequestException
+
+try:
+    response = requests.post(
+        "https://ai-research-assistant-backend.onrender.com/api/query",
+        json={"query": "Your research question"},
+        timeout=30
+    )
+    response.raise_for_status()
+
+    result = response.json()
+    print(result['response'])
+
+except RequestException as e:
+    print(f"API request failed: {e}")
+except KeyError as e:
+    print(f"Unexpected response format: {e}")
+```
+
+### **📱 Integration Examples**
+
+#### **JavaScript/Node.js**
+```javascript
+const axios = require('axios');
+
+async function queryResearchAssistant(question) {
+    try {
+        const response = await axios.post(
+            'https://ai-research-assistant-backend.onrender.com/api/query',
+            {
+                query: question,
+                include_enhancement: true
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Query failed:', error.message);
+        throw error;
+    }
+}
+
+// Usage
+queryResearchAssistant("What is machine learning?")
+    .then(result => console.log(result.response))
+    .catch(error => console.error(error));
+```
+
+#### **cURL Examples**
+```bash
+# Basic query
+curl -X POST "https://ai-research-assistant-backend.onrender.com/api/query" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "Explain neural networks", "include_enhancement": true}'
+
+# Summarization
+curl -X POST "https://ai-research-assistant-backend.onrender.com/api/summarize" \
+     -H "Content-Type: application/json" \
+     -d '{"text": "Your text here", "summary_type": "brief"}'
+
+# Health check
+curl "https://ai-research-assistant-backend.onrender.com/health"
+```
+
+### **🚨 Rate Limits & Best Practices**
+
+#### **Rate Limiting**
+- **Limit**: 60 requests per minute per IP
+- **Burst**: Up to 10 concurrent requests
+- **Headers**: Check `X-RateLimit-*` headers in responses
+
+#### **Best Practices**
+1. **Implement retry logic** with exponential backoff
+2. **Cache responses** when appropriate
+3. **Use appropriate timeouts** (30-60 seconds for complex queries)
+4. **Handle errors gracefully** with user-friendly messages
+5. **Monitor API health** before making requests
+
+#### **Error Codes**
+| Code | Meaning | Action |
+|------|---------|--------|
+| 200 | Success | Process response |
+| 400 | Bad Request | Check request format |
+| 429 | Rate Limited | Wait and retry |
+| 500 | Server Error | Retry with backoff |
+| 503 | Service Unavailable | Check system health |
+
+---
+
 ## 🧪 **Development & Testing**
 
 ### **Running Tests**
@@ -466,3 +698,32 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **⭐ Star this repository if you found it helpful!**
 
 </div>
+
+---
+
+## 📚 **Complete Documentation**
+
+### **📖 User Documentation**
+- **[User Guide](USER_GUIDE.md)** - Complete guide for end users
+- **[Getting Started](#-quick-start-guide)** - Quick setup instructions
+- **[Features Overview](#-core-features--capabilities)** - Detailed feature descriptions
+
+### **🔌 Developer Documentation**
+- **[API Documentation](API_DOCUMENTATION.md)** - Complete API reference
+- **[Interactive API Docs](https://ai-research-assistant-backend.onrender.com/docs)** - Live API playground
+- **[OpenAPI Specification](https://ai-research-assistant-backend.onrender.com/openapi.json)** - Machine-readable API spec
+
+### **🚀 Deployment Documentation**
+- **[Deployment Guide](deploy.md)** - Step-by-step deployment instructions
+- **[Environment Configuration](.env.example)** - Required environment variables
+- **[Docker Setup](docker-compose.yml)** - Container deployment
+
+### **🔧 Development Documentation**
+- **[Project Structure](#-project-structure)** - Codebase organization
+- **[Development Setup](#-development--testing)** - Local development guide
+- **[Contributing Guidelines](#-contributing)** - How to contribute
+
+### **📊 Monitoring & Support**
+- **[System Health](https://ai-research-assistant-backend.onrender.com/health)** - Live system status
+- **[Configuration](https://ai-research-assistant-backend.onrender.com/api/config)** - Current system config
+- **[GitHub Issues](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/issues)** - Bug reports and feature requests

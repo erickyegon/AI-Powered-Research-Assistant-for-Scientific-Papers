@@ -147,11 +147,18 @@ st.markdown("""
 
 # Configuration - Support both local and production
 BACKEND_URL = os.getenv("BACKEND_URL", "http://127.0.0.1:8000")
-API_BASE_URL = f"https://{BACKEND_URL}" if not BACKEND_URL.startswith("http") else BACKEND_URL
 
-# Fallback for local development
-if "127.0.0.1" in API_BASE_URL or "localhost" in API_BASE_URL:
+# Handle different URL formats
+if BACKEND_URL.startswith("https://") or BACKEND_URL.startswith("http://"):
+    API_BASE_URL = BACKEND_URL
+elif "onrender.com" in BACKEND_URL:
+    API_BASE_URL = f"https://{BACKEND_URL}"
+else:
+    # Local development
     API_BASE_URL = "http://127.0.0.1:8000"
+
+# Remove trailing slash if present
+API_BASE_URL = API_BASE_URL.rstrip('/')
 UPLOAD_ENDPOINT = f"{API_BASE_URL}/api/documents/upload"
 QUERY_ENDPOINT = f"{API_BASE_URL}/api/query"
 HEALTH_ENDPOINT = f"{API_BASE_URL}/health"
@@ -190,8 +197,8 @@ def format_timestamp(timestamp: str) -> str:
     try:
         dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
         return dt.strftime("%Y-%m-%d %H:%M:%S")
-    except:
-        return timestamp
+    except (ValueError, AttributeError):
+        return str(timestamp)
 
 
 def display_header():
@@ -534,7 +541,7 @@ def main():
                     st.markdown(f"**Processing Time:** {record['processing_time']:.2f}s")
                     st.markdown(f"**Response:** {record['response'][:200]}...")
 
-                    if st.button(f"🔄 Rerun Query", key=f"rerun_{i}"):
+                    if st.button("🔄 Rerun Query", key=f"rerun_{i}"):
                         st.session_state.current_query = record['query']
                         st.experimental_rerun()
 

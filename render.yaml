@@ -45,9 +45,6 @@ services:
       - key: PYTHON_VERSION
         value: 3.10.0
       - key: BACKEND_URL
-        fromService:
-          type: web
-          name: ai-research-assistant-backend
-          property: host
+        value: https://ai-research-assistant-backend.onrender.com
       - key: ENVIRONMENT
         value: production
