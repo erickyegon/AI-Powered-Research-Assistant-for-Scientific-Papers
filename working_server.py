@@ -273,17 +273,22 @@ async def general_exception_handler(request, exc):
     )
 
 if __name__ == "__main__":
+    # Get port from environment (Render sets this)
+    port = int(os.getenv("PORT", "8000"))
+    host = os.getenv("HOST", "0.0.0.0")
+
     print("🚀 Starting Working AI Research Assistant Server")
-    print("📍 Server will be available at: http://127.0.0.1:8000")
-    print("🔗 Health check: http://127.0.0.1:8000/health")
-    print("🔗 API docs: http://127.0.0.1:8000/docs")
-    print("🔗 Configuration: http://127.0.0.1:8000/api/config")
-    print("🔗 Test API: http://127.0.0.1:8000/api/test")
-    
+    print(f"📍 Server will be available at: http://{host}:{port}")
+    print(f"🔗 Health check: http://{host}:{port}/health")
+    print(f"🔗 API docs: http://{host}:{port}/docs")
+    print(f"🔗 Configuration: http://{host}:{port}/api/config")
+    print(f"🔗 Test API: http://{host}:{port}/api/test")
+    print(f"🌍 Environment: {os.getenv('ENVIRONMENT', 'development')}")
+
     uvicorn.run(
         app,
-        host="0.0.0.0",
-        port=8000,
+        host=host,
+        port=port,
         reload=False,
         log_level="info"
     )
