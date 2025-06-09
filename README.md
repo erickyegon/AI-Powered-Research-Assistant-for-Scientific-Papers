@@ -325,11 +325,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [Wiki](https://github.com/your-username/ai-research-assistant/wiki)
-- **Issues**: [GitHub Issues](https://github.com/your-username/ai-research-assistant/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/ai-research-assistant/discussions)
-- **Email**: support@your-domain.com
-
+- **Documentation**: [Wiki](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/wiki)   
+- **Issues**: [GitHub Issues](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/issues)   
+- **Discussions**: [GitHub Discussions](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/discussions)   
+- **Email**: [keyegon@gmail.com](mailto:keyegon@gmail.com)
 ---
 
 **Built with ❤️ for the research community**
