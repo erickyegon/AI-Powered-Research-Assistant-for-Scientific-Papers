@@ -107,6 +107,26 @@ st.markdown("""
         font-weight: bold;
     }
 
+    /* Backend control styling */
+    .backend-control {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1rem;
+        border-radius: 10px;
+        margin: 1rem 0;
+        color: white;
+    }
+
+    .quick-links a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .quick-links a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
     .status-warning {
         color: var(--warning-color);
         font-weight: bold;
@@ -187,9 +207,28 @@ def check_api_health() -> Dict[str, Any]:
         if response.status_code == 200:
             return {"status": "healthy", "data": response.json()}
         else:
-            return {"status": "unhealthy", "error": f"HTTP {response.status_code}"}
+            return {"status": "unhealthy", "error": f"HTTP {response.status_code}", "status_code": response.status_code}
     except Exception as e:
-        return {"status": "error", "error": str(e)}
+        return {"status": "error", "error": str(e), "status_code": None}
+
+def wake_up_backend():
+    """Attempt to wake up the backend service."""
+    try:
+        # Try to ping the backend to wake it up
+        response = requests.get(HEALTH_ENDPOINT, timeout=30)
+        return response.status_code == 200
+    except requests.exceptions.RequestException:
+        return False
+
+def get_backend_urls():
+    """Get backend URLs for different environments."""
+    return {
+        "health": f"{API_BASE_URL}/health",
+        "docs": f"{API_BASE_URL}/docs",
+        "config": f"{API_BASE_URL}/api/config",
+        "test": f"{API_BASE_URL}/api/test",
+        "base": API_BASE_URL
+    }
 
 
 def format_timestamp(timestamp: str) -> str:
@@ -220,9 +259,74 @@ def display_sidebar():
         health_status = check_api_health()
         if health_status["status"] == "healthy":
             st.markdown('<p class="status-success">✅ API Connected</p>', unsafe_allow_html=True)
+
+            # Display API info if available
+            if "data" in health_status:
+                api_data = health_status["data"]
+                if "components" in api_data:
+                    components = api_data["components"]
+                    st.markdown(f"**Euri LLM**: {'✅' if components.get('euri_configured') else '❌'}")
+                    st.markdown(f"**LangSmith**: {'✅' if components.get('langsmith_configured') else '❌'}")
         else:
             st.markdown('<p class="status-warning">❌ API Disconnected</p>', unsafe_allow_html=True)
             st.error(f"Error: {health_status.get('error', 'Unknown error')}")
+
+            # Backend Wake-up Section
+            st.markdown("### 🚀 Backend Control")
+
+            # Get backend URLs
+            backend_urls = get_backend_urls()
+
+            # Wake up button
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔄 Wake Up Backend", help="Click to wake up the backend service", use_container_width=True):
+                    with st.spinner("Waking up backend..."):
+                        if wake_up_backend():
+                            st.success("✅ Backend is now awake!")
+                            st.rerun()
+                        else:
+                            st.error("❌ Failed to wake up backend")
+
+            with col2:
+                if st.button("🔗 Open Backend", help="Open backend in new tab", use_container_width=True):
+                    st.markdown(f'<a href="{backend_urls["base"]}" target="_blank">🔗 Open Backend</a>', unsafe_allow_html=True)
+
+            # Quick Links
+            st.markdown("**Quick Links:**")
+            st.markdown(f"- [📊 Health Check]({backend_urls['health']})")
+            st.markdown(f"- [📖 API Docs]({backend_urls['docs']})")
+            st.markdown(f"- [⚙️ Configuration]({backend_urls['config']})")
+            st.markdown(f"- [🧪 Test API]({backend_urls['test']})")
+
+            # Auto-refresh option
+            auto_refresh = st.checkbox("🔄 Auto-refresh status (every 30s)", value=False)
+            if auto_refresh:
+                import time
+                time.sleep(30)
+                st.rerun()
+
+            # Troubleshooting tips
+            with st.expander("🔧 Troubleshooting Tips"):
+                st.markdown(f"""
+                **Common Solutions:**
+                1. **Click 'Wake Up Backend'** - Render free tier services sleep after 15 minutes
+                2. **Wait 30-60 seconds** - Backend needs time to start up
+                3. **Check Backend Status** - Click the health check link
+                4. **Refresh Page** - After backend wakes up, refresh this page
+                5. **Enable Auto-refresh** - Automatically check status every 30 seconds
+
+                **Backend Information:**
+                - Backend URL: `{API_BASE_URL}`
+                - Service: Render Web Service (Free Tier)
+                - Auto-sleep: After 15 minutes of inactivity
+                - Wake-up time: 30-60 seconds
+
+                **If problems persist:**
+                - Check [System Health]({backend_urls['health']})
+                - View [API Documentation]({backend_urls['docs']})
+                - Report issues on [GitHub](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/issues)
+                """)
 
         st.markdown("---")
 
@@ -306,7 +410,7 @@ def query_interface():
         detailed_response = st.checkbox("Detailed Response", value=False)
 
     # Submit button
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, _ = st.columns([1, 2, 1])
     with col2:
         if st.button("🚀 Submit Query", use_container_width=True, type="primary"):
             if query.strip():

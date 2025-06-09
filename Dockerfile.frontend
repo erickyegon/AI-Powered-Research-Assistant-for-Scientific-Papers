@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     curl \
-    && rm-rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY frontend/requirements.txt .
@@ -18,7 +18,10 @@ COPY frontend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy frontend code
-COPY frontend/ ./frontend/
+COPY frontend/ ./
+
+# Create .streamlit directory
+RUN mkdir -p .streamlit
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
@@ -32,4 +35,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8501/_stcore/health || exit 1
 
 # Start command
-CMD ["streamlit", "run", "frontend/app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]
