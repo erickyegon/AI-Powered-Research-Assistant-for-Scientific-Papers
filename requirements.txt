@@ -1,0 +1,80 @@
+# Core Framework
+streamlit
+fastapi
+uvicorn
+
+# HTTP & API
+requests
+httpx
+aiohttp
+
+# Data Processing & ML
+pandas
+numpy
+scikit-learn
+
+# LangChain & AI
+langchain==0.1.0
+langchain-core>=0.1.7,<0.2
+# Removed explicit langchain-core version to avoid conflict
+langchain-community
+sentence-transformers
+
+# Vector Stores & Embeddings
+pinecone-client
+chromadb
+faiss-cpu
+
+# Database
+sqlalchemy
+alembic
+psycopg2-binary
+redis
+
+# Document Processing
+pypdf
+python-docx
+python-multipart
+PyMuPDF
+
+# Visualization
+plotly
+matplotlib
+seaborn
+
+# Authentication & Security
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+
+# Utilities
+python-dotenv
+pydantic
+structlog
+tenacity
+
+# Monitoring & Metrics
+prometheus-client
+
+# Development & Testing
+pytest
+pytest-asyncio
+black
+flake8
+
+# Optional UI Components
+streamlit-option-menu
+streamlit-aggrid
+streamlit-ace
+streamlit-elements
+streamlit-lottie
+
+# File Handling
+aiofiles
+watchdog
+
+# Network Analysis
+networkx
+
+# Word Cloud
+wordcloud

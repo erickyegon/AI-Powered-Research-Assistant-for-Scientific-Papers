@@ -1,0 +1,53 @@
+services:
+  # Backend API Service
+  - type: web
+    name: ai-research-assistant-backend
+    env: python
+    region: oregon
+    plan: starter
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.working_server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: EURI_API_KEY
+        sync: false
+      - key: LANGSMITH_API_KEY
+        sync: false
+      - key: LANGSMITH_PROJECT
+        value: ai-research-assistant-production
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: EURI_BASE_URL
+        value: https://api.euron.one/api/v1/euri/alpha/chat/completions
+      - key: EURI_MODEL
+        value: gpt-4.1-nano
+      - key: EURI_TEMPERATURE
+        value: "0.7"
+      - key: EURI_MAX_TOKENS
+        value: "2000"
+
+  # Frontend Streamlit Service
+  - type: web
+    name: ai-research-assistant-frontend
+    env: python
+    region: oregon
+    plan: starter
+    buildCommand: pip install -r frontend/requirements.txt
+    startCommand: streamlit run frontend/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true --server.enableCORS false --server.enableXsrfProtection false
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: ai-research-assistant-backend
+          property: host
+      - key: ENVIRONMENT
+        value: production
