@@ -727,3 +727,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **[System Health](https://ai-research-assistant-backend.onrender.com/health)** - Live system status
 - **[Configuration](https://ai-research-assistant-backend.onrender.com/api/config)** - Current system config
 - **[GitHub Issues](https://github.com/erickyegon/AI-Powered-Research-Assistant-for-Scientific-Papers/issues)** - Bug reports and feature requests
+
+---
+
+Author: Erick Kiprotich Yegon, epidemiologist and data scientist (real-world evidence, HEOR, causal inference) · Portfolio: https://erickyegon.github.io · LinkedIn: https://linkedin.com/in/erickyegon
